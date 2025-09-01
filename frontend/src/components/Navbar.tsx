@@ -1,9 +1,59 @@
 import { Menu, Plus } from "lucide-react";
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { toast } from "sonner";
 
 export default function Navbar() {
     const [ open, setOpen ] = useState(false);
+    const [ authenticated, setAuthenticated ] = useState<boolean | null>(null);
     const currentPath = window.location.pathname;
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/session`, {
+                    credentials: "include"
+                });
+                if (!response.ok) {
+                    setAuthenticated(false);
+                    return;
+                }
+
+                const data = await response.json();
+                setAuthenticated(data.authenticated);
+            } catch (error) {
+                console.log(error);
+                setAuthenticated(false);
+            }
+        }
+        checkAuth();
+    }, []);
+
+    const logout = async () => {
+        const confirmLogout = confirm('Are you sure you want to logout?');
+        if (!confirmLogout) return;
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/logout`, {
+                method: 'POST',
+                credentials: "include",
+                headers: {
+                'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                setAuthenticated(false);
+                toast.success('User logged out');
+                window.location.href = "/login";
+            } else {
+                toast.error('Logout failed');
+            }
+        } catch (error) {
+            console.error('Error during logout:', error);
+            toast.error('Something went wrong');
+        }
+  };
+
     return (
         <div className='w-full min-h-[70px] flex justify-center items-center'>
             <nav className='w-full max-w-6xl px-3 py-2 rounded-xl bg-[#6c9968] shadow-md flex justify-between items-center'>
@@ -24,7 +74,11 @@ export default function Navbar() {
                         </li>
                         ))}
                     </ul>
-                    <button className='bg-white hidden sm:block text-sm shadow-md text-black font-semibold px-4 py-2 rounded-md'><a href="/login" className='hover:font-bold'>Login</a></button>
+                    {authenticated ? (
+                        <button onClick={logout} className='bg-white hidden sm:block text-sm shadow-md text-black font-semibold px-4 py-2 rounded-md'>Logout</button>
+                    ) : (
+                        <button className='bg-white hidden sm:block text-sm shadow-md text-black font-semibold px-4 py-2 rounded-md'><a href="/login" className='hover:font-bold'>Login</a></button>
+                    )}
                 </div>
 
                 <div className='sm:hidden flex items-center justify-center'>
@@ -40,7 +94,11 @@ export default function Navbar() {
                                     </li>
                                 ))} 
                             </ul>
-                            <button className='bg-white text-sm shadow-md text-black font-semibold px-4 py-2 rounded-md mt-4'><a href="/login">Login</a></button>
+                            {authenticated ? (
+                                <button onClick={logout} className='bg-white text-sm shadow-md text-black font-semibold px-4 py-2 rounded-md mt-4'>Logout</button>
+                            ) : (
+                                <button className='bg-white text-sm shadow-md text-black font-semibold px-4 py-2 rounded-md mt-4'><a href="/login">Login</a></button>
+                            )}
                             <Plus onClick={() => setOpen(false)} className='mt-4 w-5 h-5 rotate-45 cursor-pointer sm:hidden' />
                         </div>
                     )}

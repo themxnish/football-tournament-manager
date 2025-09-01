@@ -8,6 +8,8 @@ import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
 import Teams from './pages/Teams'
 
+import { Toaster } from 'sonner'
+
 function App() {
 
   return (
@@ -22,6 +24,7 @@ function App() {
           <Route path="/teams" element={<Teams />} />
         </Routes>
       </div>
+      <Toaster />
       <Footer />
     </div>
   )
