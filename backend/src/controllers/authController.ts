@@ -133,3 +133,40 @@ export const logout = async (req: Request, res: Response) => {
     });
   }
 }
+
+export const admin = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  try {
+    if (!email || !password) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
+
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    const hash = await bcrypt.hash(adminPassword as string, 10);
+
+    if (email !== adminEmail || password !== adminPassword) {
+      return res.status(401).json({ message: "Invalid admin credentials." });
+    }
+    if (!adminEmail) {
+      return res.status(400).json({ message: "ADMIN_EMAIL environment variable is not set." });
+    }
+
+    await db.user.upsert({
+      where: { email: adminEmail },
+      update: {},
+      create: {
+        email: adminEmail,
+        fullName: "Super Admin",
+        password: hash,
+        role: "admin",
+      },
+    });
+
+    return res.json({ message: "Admin user created successfully", success: true });
+  } catch (error) {
+    return res.status(500).json({
+      message: error instanceof Error ? error.message : "Internal server error",
+    });
+  }
+}
