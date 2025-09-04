@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function Login() {
@@ -6,6 +7,7 @@ export default function Login() {
         email: '',
         password: '',
     });
+    const navigate = useNavigate();
 
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -26,7 +28,10 @@ export default function Login() {
 
             if (response.ok) {
                 toast.success('User logged in successfully.');
-                window.location.href = "/";
+                navigate('/');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 600);
             } else {
                 const { message } = await response.json();
                 toast.error(message);

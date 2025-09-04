@@ -1,11 +1,14 @@
 import { Menu, Plus } from "lucide-react";
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function Navbar() {
     const [ open, setOpen ] = useState(false);
     const [ authenticated, setAuthenticated ] = useState<boolean | null>(null);
+    const [ admin, setAdmin ] = useState(false);
     const currentPath = window.location.pathname;
+    const navigate = useNavigate()
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -20,6 +23,12 @@ export default function Navbar() {
 
                 const data = await response.json();
                 setAuthenticated(data.authenticated);
+
+                if (data.user && data.user.role === "admin") {
+                    setAdmin(true);
+                } else {
+                    setAdmin(false);
+                }
             } catch (error) {
                 console.log(error);
                 setAuthenticated(false);
@@ -44,7 +53,10 @@ export default function Navbar() {
             if (response.ok) {
                 setAuthenticated(false);
                 toast.success('User logged out');
-                window.location.href = "/login";
+                navigate('/login');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000)
             } else {
                 toast.error('Logout failed');
             }
@@ -74,6 +86,12 @@ export default function Navbar() {
                         </li>
                         ))}
                     </ul>
+                    {admin && (
+                            <a  href="/admin" className='group flex flex-col items-center gap-2 text-sm mt-2'>
+                                <p className={`${currentPath === "/admin" ? "text-black font-semibold" : "text-white"}`}>Admin</p>
+                                <hr className='w-0 group-hover:w-2/4 transition-all duration-500 ease-in-out border-0 h-[1.5px] bg-black' />
+                            </a>
+                    )}
                     {authenticated ? (
                         <button onClick={logout} className='bg-white hidden sm:block text-sm shadow-md text-black font-semibold px-4 py-2 rounded-md'>Logout</button>
                     ) : (
@@ -94,6 +112,12 @@ export default function Navbar() {
                                     </li>
                                 ))} 
                             </ul>
+                            {admin && (
+                                <a href="/admin" className='group flex flex-col items-center gap-2 text-sm mt-2'>
+                                    <p className={`${currentPath === "/admin" ? "text-black font-semibold" : "text-white"}`}>Admin</p>
+                                    <hr className='w-0 group-hover:w-2/4 transition-all duration-500 ease-in-out border-0 h-[1.5px] bg-black' />
+                                </a>
+                            )}
                             {authenticated ? (
                                 <button onClick={logout} className='bg-white text-sm shadow-md text-black font-semibold px-4 py-2 rounded-md mt-4'>Logout</button>
                             ) : (

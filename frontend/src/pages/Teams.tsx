@@ -1,22 +1,34 @@
-const teams = [
-  {
-    name: "ADH Mavericks A",
-    category: "Mixed Gender",
-    coach: "Coach A",
-  },
-  {
-    name: "Team D",
-    category: "Boys",
-    coach: "Coach Darshan",
-  },
-  {
-    name: "FC Barcelona",
-    category: "Girls",
-    coach: "Drogba Baba",
-  }
-];
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function Teams() {
+  const [teams, setTeams] = useState<Array<{ name: string; category: string; coach: string }>>([]);
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/team/teams`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setTeams(data.teams || []);
+        } else {
+          const { message } = await response.json();
+          toast.error(message);
+        }
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : 'An error occurred');
+      }
+    };
+    
+    fetchTeams();
+  }, []);
   return (
     <div className='flex flex-col sm:items-center'>
     <div className='sm:w-1/2 mt-4'>
