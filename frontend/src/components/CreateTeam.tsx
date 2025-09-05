@@ -30,6 +30,9 @@ export const CreateTeam = () => {
 
             if (response.ok) {
                 toast.success('Team created successfully.');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000)
             } else {
                 const { message } = await response.json();
                 toast.error(message);
