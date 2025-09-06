@@ -58,3 +58,15 @@ export const getSchedules = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Failed to fetch schedules" });
     }
 }
+
+export const remove = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+        const schedule = await db.schedule.delete({
+            where: { id: id }
+        });
+        res.status(200).json({ message: "Schedule deleted successfully", schedule });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to delete schedule" });
+    }
+}
