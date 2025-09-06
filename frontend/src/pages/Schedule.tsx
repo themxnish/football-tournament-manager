@@ -1,27 +1,49 @@
+import { useEffect, useState } from "react";
 import MatchCard from "../components/MatchCard";
 
-const matches = [
-    {
-        date: "12 Aug, 2025",
-        time: "7:00 PM",
-        teamA: { name: "ADH Mavericks A", coach: "Coach A" },
-        teamB: { name: "ADH Mavericks B", coach: "Coach B" },
-        category: "mixed gender",
-        pitch: 1,
-        status: true,
-    },
-    {
-        date: "13 Aug, 2025",
-        time: "8:00 PM",
-        teamA: { name: "Team C", coach: "Coach C" },
-        teamB: { name: "Team D", coach: "Coach D" },
-        category: "boys",
-        pitch: 2,
-        status: false,
-    }
-];
-    
+interface Team {
+  name: string;
+  coach: string;
+}
+
+interface Match {
+  date: string;
+  time: string;
+  teamA: Team;
+  teamB: Team;
+  category: string;
+  pitch: number;
+  status: boolean;
+}
+
 export default function Schedule() {
+    const [matches, setMatches] = useState<Match[]>([]);
+
+    useEffect(() => {
+        const fetchMatches = async () => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/schedule/allMatches`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include",
+                });
+
+                if(!response.ok) {
+                    console.error("Failed to fetch matches");
+                    return;
+                }
+
+                const data = await response.json();
+                setMatches(data || []);
+                console.log(data);
+            } catch (error) {
+                console.error("Error fetching matches:", error);
+            }
+        }
+        fetchMatches();
+    }, []);
     return (
         <div className='flex flex-col sm:items-center'>
             <div className='sm:w-1/2'>

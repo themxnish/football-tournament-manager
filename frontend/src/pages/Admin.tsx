@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { CreateTeam } from "../components/CreateTeam";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { CreateMatch } from "../components/CreateMatch";
 
 export const Admin = () => {
   const [openSection, setOpenSection] = useState<string | null>(null);
 
   const adminTasks = [
     { key: "createTeam", title: "Create New Team", component: <CreateTeam /> },
+    { key: "createMatch", title: "Add New Match", component: <CreateMatch /> },
     { key: "manageUsers", title: "Manage Users", component: <div>Manage Users Component</div> },
   ];
 

@@ -12,6 +12,7 @@ type Match = {
     category: string;
     status: boolean;
 };
+const dateFormat = (date: string) => new Date(date).toDateString();
 
 interface MatchCardProps {
     match: Match;
@@ -20,25 +21,25 @@ interface MatchCardProps {
 export default function MatchCard({ match }: MatchCardProps) {
     return (
         <div className='flex flex-col sm:flex-row items-center bg-[#6c9968] rounded-xl px-4 py-2 mb-2'>
-            <div className='text-xs text-gray-700 w-full sm:w-32 text-center sm:text-left mb-2 sm:mb-0'>
-                {match.date}<br />{match.time}
+            <div className='text-xs text-gray-800 w-full sm:w-32 text-center sm:text-left mb-2 sm:mb-0'>
+                {dateFormat(match.date)}<br />{match.time}
             </div>
             <div className='flex-1 flex flex-row items-center justify-center gap-3'>
                 <div className='flex items-center gap-2'>
                     <div className='flex flex-col items-start'>
                         <p className='font-bold text-sm text-black'>{match.teamA.name}</p>
-                        <p className='text-xs text-gray-700'>{match.teamA.coach}</p>
+                        <p className='text-xs text-gray-800'>{match.teamA.coach}</p>
                     </div>
                 </div>
                 <span className='text-gray-800 flex font-semibold mx-2'>vs</span>
                 <div className='flex items-center gap-2'>
                     <div className='flex flex-col items-start'>
                         <p className='font-bold text-sm text-black'>{match.teamB.name}</p>
-                        <p className='text-xs text-gray-700'>{match.teamB.coach}</p>
+                        <p className='text-xs text-gray-800'>{match.teamB.coach}</p>
                     </div>
                 </div>
             </div>
-            <div className='text-xs text-gray-700 w-full sm:w-24 text-center sm:text-left'>
+            <div className='text-xs text-gray-800 w-full sm:w-24 text-center sm:text-left'>
                 <p className='sm:mr-2'>Pitch no. {match.pitch}</p>
             </div>
             <div className='flex flex-col items-center sm:items-end mt-2 sm:mt-0 w-full sm:w-auto'>
