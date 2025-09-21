@@ -2,9 +2,18 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Delete } from "lucide-react";
 
+function groupByCategory(teams: Array<{ id: string; name: string; category: string; coach: string }>) {
+  return teams.reduce((acc, team) => {
+    (acc[team.category] = acc[team.category] || []).push(team);
+    return acc;
+  }, {} as Record<string, typeof teams>);
+}
+
 export default function Teams() {
   const [teams, setTeams] = useState<Array<{ id: string; name: string; category: string; coach: string }>>([]);
   const [ admin, setAdmin ] = useState(false);
+
+  const groupedTeams = groupByCategory(teams);
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -82,30 +91,35 @@ export default function Teams() {
     }
   }
   return (
-    <div className='flex flex-col sm:items-center'>
-    <div className='sm:w-1/2 mt-4'>
-      <h2 className='text-2xl font-bold mb-4 text-center'>Teams</h2>
-      {teams.map((team) => (
-        <div key={team.id} className='flex flex-row items-center bg-[#6c9968] bg-opacity-90 gap-4 rounded-xl shadow px-4 py-3 mb-2'>
-          <div className='flex-1'>
-            <p className='font-bold text-sm text-black'>{team.name}</p>
+    <div className='flex flex-col sm:items-center px-4'>
+      <div className='sm:w-2/3 lg:w-1/2 mt-4'>
+        <h2 className='text-2xl font-bold mb-4 text-center'>Teams</h2>
+        {Object.entries(groupedTeams).map(([category, teamsInCategory]) => (
+          <div key={category} className='mb-6 w-full'>
+            <h3 className='text-xl font-semibold mb-3'>{category}</h3>
+            <div className='space-y-2'>
+              {(teamsInCategory as Array<{ id: string; name: string; category: string; coach: string }>).map((team) => (
+                <div key={team.id} className='flex flex-col sm:flex-row sm:items-center justify-between bg-[#6c9968] bg-opacity-30 gap-2 rounded-xl shadow px-4 py-3'>
+                  <div className='flex flex-col sm:flex-row sm:items-center gap-1 flex-1'>
+                    <p className='font-bold text-md text-black'>{team.name}</p>
+                    <span className='text-xs font-medium text-gray-800 px-3 py-1 rounded-xl sm:ml-2 bg-white w-fit'>{team.category}</span>
+                    <span className='text-xs text-gray-100 bg-[#4a6e4d] px-3 py-1 rounded-xl mt-1 sm:mt-0'>Coach: <span className='font-semibold'>{team.coach}</span></span>
+                  </div>
+                  {admin && 
+                    <button
+                      onClick={() => handleDelete(team.name)}
+                      className='mt-3 sm:mt-0 sm:ml-4 text-red-600 hover:text-red-800 font-semibold self-end sm:self-auto'
+                      title="Delete"
+                    >
+                      <Delete size={22} />
+                    </button>
+                  }
+                </div>
+              ))}
+            </div>
           </div>
-          <div className='flex flex-col sm:flex-row'>
-            <span className='text-xs font-medium text-gray-800 px-3 py-1 rounded-xl bg-white'>{team.category}</span>
-            <span className='text-xs text-gray-100 bg-[#4a6e4d] px-3 py-1 rounded-xl ml-2 ml-0 sm:ml-2 mt-1 sm:mt-0'>Coach: <span className='font-semibold'>{team.coach}</span></span>
-          </div>
-          {admin &&
-            <button
-              onClick={() => handleDelete(team.name)}
-              className='text-red-600 hover:text-red-800 text-sm font-semibold'
-              title="Delete"
-            >
-              <Delete size={22} />
-            </button>
-          }
-        </div>
-      ))}
-    </div>
+            ))}
+      </div>
     </div>
   );
 }
