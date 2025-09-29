@@ -79,6 +79,13 @@ export default function MatchCard({ match }: MatchCardProps) {
       
     }
 
+    const handlePlay = async () => {
+        if (!confirm(`Are you sure you want to play this match?`)) return;
+        if (match.id) {
+            window.location.href = `/play/${match.id}`;
+        }
+    }
+
     return (
         <div className='flex flex-col sm:flex-row items-center bg-[#6c9968] rounded-xl px-4 py-2 mb-2 sm:gap-2'>
             <div className='w-full sm:w-28 flex flex-col items-center sm:items-start text-xs text-gray-800 mb-2 sm:mb-0'>
@@ -120,7 +127,7 @@ export default function MatchCard({ match }: MatchCardProps) {
                         <Delete size={22} />
                     </button>
                 ): (
-                    <button className='bg-white text-black text-sm font-semibold px-3 py-1 rounded-lg mt-2'>Play Match</button>    
+                    <button onClick={() => match.id && handlePlay()} className='bg-white text-black text-sm font-semibold px-3 py-1 rounded-lg mt-2 hover:cursor-pointer'>Play Match</button>    
                 )}
             </div>
         </div>

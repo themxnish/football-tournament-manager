@@ -59,6 +59,25 @@ export const getSchedules = async (req: Request, res: Response) => {
     }
 }
 
+export const getScheduleById = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+        const match = await db.schedule.findUnique({
+            where: { id: id },
+            include: {
+                teamA: true,
+                teamB: true
+            }
+        });
+        if(!match) {
+            return res.status(404).json({ message: "Scheduled match not found" });
+        }
+        res.status(200).json(match);
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch schedule" });
+    }
+}
+
 export const remove = async (req: Request, res: Response) => {
     const { id } = req.params;
     try {

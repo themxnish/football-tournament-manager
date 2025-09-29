@@ -96,13 +96,12 @@ export default function Teams() {
         <h2 className='text-2xl font-bold mb-4 text-center'>Teams</h2>
         {Object.entries(groupedTeams).map(([category, teamsInCategory]) => (
           <div key={category} className='mb-6 w-full'>
-            <h3 className='text-xl font-semibold mb-3'>{category}</h3>
+            <h3 className='text-xl font-bold mb-3'>{category}</h3>
             <div className='space-y-2'>
               {(teamsInCategory as Array<{ id: string; name: string; category: string; coach: string }>).map((team) => (
                 <div key={team.id} className='flex flex-col sm:flex-row sm:items-center justify-between bg-[#6c9968] bg-opacity-30 gap-2 rounded-xl shadow px-4 py-3'>
                   <div className='flex flex-col sm:flex-row sm:items-center gap-1 flex-1'>
                     <p className='font-bold text-md text-black'>{team.name}</p>
-                    <span className='text-xs font-medium text-gray-800 px-3 py-1 rounded-xl sm:ml-2 bg-white w-fit'>{team.category}</span>
                     <span className='text-xs text-gray-100 bg-[#4a6e4d] px-3 py-1 rounded-xl mt-1 sm:mt-0'>Coach: <span className='font-semibold'>{team.coach}</span></span>
                   </div>
                   {admin && 

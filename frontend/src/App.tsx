@@ -7,6 +7,7 @@ import Schedule from './pages/Schedule'
 import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
 import Teams from './pages/Teams'
+import Play from './pages/Play'
 import { Admin } from './pages/Admin'
 
 import { Toaster } from 'sonner'
@@ -24,6 +25,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/teams" element={<Teams />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/play/:id" element={<Play />} />
         </Routes>
       </div>
       <Toaster />
