@@ -139,7 +139,13 @@ export default function MatchCard({ match }: MatchCardProps) {
                         <Delete size={22} />
                     </button>
                 ): (
-                    <button onClick={() => match.id && handlePlay()} className='bg-white text-black text-sm font-semibold px-3 py-1 rounded-lg mt-2 hover:cursor-pointer'>Play Match</button>    
+                   <>
+                    {!match.status ? (
+                        <button onClick={() => match.id && handlePlay()} className='bg-white text-black text-sm font-semibold px-3 py-1 rounded-lg mt-2 hover:cursor-pointer'>Play Match</button>
+                    ) :(
+                         <button onClick={() => { if (match.id) window.location.href = `/view/${match.id}`; }} className='bg-white text-black text-sm font-semibold px-3 py-1 rounded-lg mt-2 hover:cursor-pointer'>View Match</button>
+                    )}
+                   </>    
                 )}
             </div>
         </div>

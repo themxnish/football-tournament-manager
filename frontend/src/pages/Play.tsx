@@ -4,11 +4,13 @@ import { toast } from "sonner";
 import MatchPlay from "../components/PlayMatch";
 
 type Team = {
+  id: string;
   name: string;
   coach: string;
 };
 
 type Match = {
+  id: string;
   teamA: Team;
   teamB: Team;
   date: string;

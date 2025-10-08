@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { toast } from "sonner";
 
-type Team = { name: string, coach: string };
+type Team = { id: string; name: string, coach: string };
 type Match = {
+  id: string;
   teamA: Team;
   teamB: Team;
   date: string;
@@ -11,6 +13,7 @@ type Match = {
 };
 
 export default function MatchPlay({ match }: { match: Match }) {
+
   const [ scoreA, setScoreA ] = useState(0);
   const [ scoreB, setScoreB ] = useState(0);
   const [ scorerA, setScorerA ] = useState<string[]>([]);
@@ -37,6 +40,42 @@ export default function MatchPlay({ match }: { match: Match }) {
       setScorerNameB("");
     }
   }
+
+  const submit = async () => {
+    if (!ended) return alert("End the match before submitting. Please verify all details are correct.");
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/play/record`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          scheduleId: match.id,
+          teamAId: match.teamA.id,
+          teamBId: match.teamB.id,
+          scoreA,
+          scoreB,
+          scorersA: scorerA,
+          scorersB: scorerB,
+          potmA,
+          potmB,
+          winner: scoreA > scoreB ? match.teamA.id : match.teamB.id,
+        }),
+      });
+
+      if (response.ok) {
+        toast.success("Match data recorded successfully");
+        window.location.href = '/schedule';
+      } else {
+        const { message } = await response.json();
+        toast.error(message);
+      }
+    } catch (error) {
+      console.error("Error submitting match data:", error);
+    }
+  }
+  
   return (
     <div className='flex flex-col items-center w-full gap-5 mt-4'>
       <div className='flex flex-col sm:flex-row justify-center items-center w-full gap-5'>
@@ -96,6 +135,9 @@ export default function MatchPlay({ match }: { match: Match }) {
             <p className='text-lg font-bold text-red-700'>Match Ended!</p>
             <span className='text-gray-700 font-semibold text-sm'>All the Scores and Details are now saved.</span>
             <p className='font-semibold'>Winner: {scoreA > scoreB ? match.teamA.name : match.teamB.name}</p>
+            <button className='px-3 py-1 mt-2 rounded bg-green-700 text-white font-bold cursor-pointer' onClick={submit}>
+              Submit Match Record
+            </button>
           </div>
         )}
       </div>
