@@ -45,7 +45,7 @@ export default function Schedule() {
     }, []);
     return (
         <div className='flex flex-col sm:items-center'>
-            <div className='sm:w-full lg:w-3/4 xl:w-1/2'>
+            <div className='sm:w-full lg:w-3/4 xl:w-1/2 mt-4'>
                 <h2 className='text-2xl font-bold mb-4 text-center'>Match Schedule</h2>
                 {matches.map((m, i) => (
                     <MatchCard key={i} match={m} />

@@ -1,9 +1,11 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import MatchPlay from "../components/PlayMatch";
 
 type Team = {
   name: string;
+  coach: string;
 };
 
 type Match = {
@@ -11,7 +13,10 @@ type Match = {
   teamB: Team;
   date: string;
   time: string;
+  pitch: string | number;
+  category: string;
 };
+const dateFormat = (date: string) => new Date(date).toDateString();
 
 export default function Play() {
   const { id } = useParams();
@@ -46,10 +51,17 @@ export default function Play() {
   }
 
   return (
-    <div>
-      <div>
-        <h4>{match.teamA.name} vs {match.teamB.name}</h4>
-        <p>{match.date}, {match.time}</p>
+    <div className='sm:mx-auto my-10 bg-[#6c9968] rounded-xl shadow-lg p-6 max-w-4xl'>
+      <div className='flex flex-col items-center'>
+        <h1 className='text-2xl font-bold mb-2'>Play Match</h1>
+        <p className='text-sm text-gray-800'>{dateFormat(match.date)}, {match.time}</p>
+
+        <div className='flex gap-3 py-2'>
+          <span className='bg-green-200 px-3 py-1 rounded'>{match.category}</span>
+          <span className='bg-green-700 px-3 py-1 rounded'>Pitch {match.pitch}</span>
+        </div>
+
+        <MatchPlay match={match} />
       </div>
     </div>
   )

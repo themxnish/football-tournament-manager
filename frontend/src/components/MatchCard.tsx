@@ -25,6 +25,7 @@ import { toast } from "sonner";
 
 export default function MatchCard({ match }: MatchCardProps) {
     const [ admin, setAdmin ] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(false);
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -34,18 +35,25 @@ export default function MatchCard({ match }: MatchCardProps) {
             });
             if (!response.ok) {
               setAdmin(false);
+              setLoggedIn(false);
               return;
             }
     
             const data = await response.json();
-            if (data.user && data.user.role === "admin") {
-              setAdmin(true);
+            if (data.user) {
+                setLoggedIn(true);
+                if (data.user.role === "admin") {
+                    setAdmin(true);
+                }
             } else {
-              setAdmin(false);
+                setLoggedIn(false);
+                setAdmin(false);
             }
+
           } catch (error) {
               console.log(error);
               setAdmin(false);
+              setLoggedIn(false);
           }
         }
       checkAuth();
@@ -80,6 +88,10 @@ export default function MatchCard({ match }: MatchCardProps) {
     }
 
     const handlePlay = async () => {
+        if (!loggedIn) {
+            toast.error("You must log in before starting a match");
+            return;
+        }
         if (!confirm(`Are you sure you want to play this match?`)) return;
         if (match.id) {
             window.location.href = `/play/${match.id}`;
