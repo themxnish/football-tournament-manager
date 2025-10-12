@@ -11,6 +11,7 @@ import Play from './pages/Play'
 import { Admin } from './pages/Admin'
 
 import { Toaster } from 'sonner'
+import Protected from './components/Protected'
 
 function App() {
 
@@ -21,10 +22,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/schedule" element={<Schedule />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Protected><Login /></Protected>} />
+          <Route path="/register" element={<Protected><Register /></Protected>} />
           <Route path="/teams" element={<Teams />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin" element={<Protected><Admin /></Protected>} />
           <Route path="/play/:id" element={<Play />} />
         </Routes>
       </div>
