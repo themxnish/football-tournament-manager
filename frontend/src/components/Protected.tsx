@@ -14,7 +14,7 @@ export default function Protected({ children }: { children: React.ReactNode }) {
                 if (response.ok) {
                     const data = await response.json();
                     
-                    if (data.authenticated === true || data?.user || data.user.role !== 'admin') {
+                    if (!data.authenticated || data.user.role !== 'admin') {
                         navigate('/');
                     }
                 }

@@ -3,12 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(uuid())
   email     String   @unique
   password  String
   fullName  String?
@@ -18,45 +18,43 @@ model User {
 }
 
 model Team {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  category    String
-  coach       String
+  id       String     @id @default(uuid())
+  name     String
+  category String
+  coach    String
 
   schedulesAsTeamA Schedule[] @relation("TeamA")
   schedulesAsTeamB Schedule[] @relation("TeamB")
 }
 
 model Schedule {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  date      DateTime
-  time      String
-  pitch     String
-  status    Boolean @default(false)
-  category  String
+  id       String   @id @default(uuid())
+  date     DateTime
+  time     String
+  pitch    String
+  status   Boolean  @default(false)
+  category String
 
-  teamAId   String   @db.ObjectId
-  teamA     Team     @relation("TeamA", fields: [teamAId], references: [id])
+  teamAId String
+  teamA   Team     @relation("TeamA", fields: [teamAId], references: [id])
 
-  teamBId   String   @db.ObjectId
-  teamB     Team     @relation("TeamB", fields: [teamBId], references: [id])
+  teamBId String
+  teamB   Team     @relation("TeamB", fields: [teamBId], references: [id])
 
   matchRecord MatchRecord[]
 }
 
 model MatchRecord {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  teamAId     String   @db.ObjectId
-  teamBId     String   @db.ObjectId
-  scoreA      Int      @default(0)
-  scoreB      Int      @default(0)
-  scorersA    String[]
-  scorersB    String[]
-  potmA       String?
-  potmB       String?
-
-  winner      String?
-  
-  scheduleId  String   @db.ObjectId
-  schedule    Schedule @relation(fields: [scheduleId], references: [id])
+  id         String   @id @default(uuid())
+  teamAId    String
+  teamBId    String
+  scoreA     Int      @default(0)
+  scoreB     Int      @default(0)
+  scorersA   String[]
+  scorersB   String[]
+  potmA      String?
+  potmB      String?
+  winner     String?
+  scheduleId String
+  schedule   Schedule @relation(fields: [scheduleId], references: [id])
 }
