@@ -22,10 +22,12 @@ interface MatchCardProps {
 import { Delete } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import ViewMatch from "./ViewMatch";
 
 export default function MatchCard({ match }: MatchCardProps) {
     const [ admin, setAdmin ] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
+    const [ showMatch, setShowMatch ] = useState(false);
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -143,11 +145,14 @@ export default function MatchCard({ match }: MatchCardProps) {
                     {!match.status ? (
                         <button onClick={() => match.id && handlePlay()} className='bg-white text-black text-sm font-semibold px-3 py-1 rounded-lg mt-2 hover:cursor-pointer'>Play Match</button>
                     ) :(
-                         <button onClick={() => { if (match.id) window.location.href = `/view/${match.id}`; }} className='bg-white text-black text-sm font-semibold px-3 py-1 rounded-lg mt-2 hover:cursor-pointer'>View Match</button>
+                         <button onClick={() => setShowMatch(true)} className='bg-white text-black text-sm font-semibold px-3 py-1 rounded-lg mt-2 hover:cursor-pointer'>View Match</button>
                     )}
                    </>    
                 )}
             </div>
+            {showMatch && (
+                <ViewMatch scheduleId={match.id!} onClose={() => setShowMatch(false)} />
+            )}
         </div>
     )
 }
