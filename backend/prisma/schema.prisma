@@ -18,30 +18,26 @@ model User {
 }
 
 model Team {
-  id       String     @id @default(uuid())
-  name     String
-  category String
-  coach    String
-
+  id               String     @id @default(uuid())
+  name             String
+  category         String
+  coach            String
   schedulesAsTeamA Schedule[] @relation("TeamA")
   schedulesAsTeamB Schedule[] @relation("TeamB")
 }
 
 model Schedule {
-  id       String   @id @default(uuid())
-  date     DateTime
-  time     String
-  pitch    String
-  status   Boolean  @default(false)
-  category String
-
-  teamAId String
-  teamA   Team     @relation("TeamA", fields: [teamAId], references: [id])
-
-  teamBId String
-  teamB   Team     @relation("TeamB", fields: [teamBId], references: [id])
-
+  id          String        @id @default(uuid())
+  date        DateTime
+  time        String
+  pitch       String
+  status      Boolean       @default(false)
+  category    String
+  teamAId     String  
+  teamBId     String
   matchRecord MatchRecord[]
+  teamA       Team          @relation("TeamA", fields: [teamAId], references: [id])
+  teamB       Team          @relation("TeamB", fields: [teamBId], references: [id])
 }
 
 model MatchRecord {

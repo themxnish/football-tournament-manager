@@ -41,6 +41,13 @@ export default function MatchPlay({ match }: { match: Match }) {
     }
   }
 
+  function winner() {
+    if (scoreA > scoreB) return match.teamA.id;
+    if (scoreB > scoreA) return match.teamB.id;
+    if (scoreA === scoreB) return "Draw";
+    return null;
+  }
+
   const submit = async () => {
     if (!ended) return alert("End the match before submitting. Please verify all details are correct.");
     try {
@@ -60,7 +67,7 @@ export default function MatchPlay({ match }: { match: Match }) {
           scorersB: scorerB,
           potmA,
           potmB,
-          winner: scoreA > scoreB ? match.teamA.id : match.teamB.id,
+          winner: winner(),
         }),
       });
 

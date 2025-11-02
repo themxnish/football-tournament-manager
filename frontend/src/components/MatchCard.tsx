@@ -125,7 +125,7 @@ export default function MatchCard({ match }: MatchCardProps) {
             <div className='flex flex-col items-center sm:items-end mt-2 sm:mt-0 w-full sm:w-auto gap-1'>
                 <span className='text-xs font-semibold text-black mb-1'>{match.category}</span>
                 <span className={`rounded px-2 py-1 text-xs font-semibold ${match.status ? 'bg-green-100 text-green-900' : 'bg-red-200 text-red-700'}`}>
-                {match.status ? "Completed" : "Not Started"}
+                {match.status ? "Completed" : "Not Completed"}
                 </span>
             </div>
             
